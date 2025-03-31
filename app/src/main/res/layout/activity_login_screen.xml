@@ -46,7 +46,7 @@
         app:srcCompat="@drawable/loginpage" />
 
     <EditText
-        android:id="@+id/editTextText"
+        android:id="@+id/user_email"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="40dp"
@@ -63,7 +63,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
     <EditText
-        android:id="@+id/editTextTextPassword"
+        android:id="@+id/user_pass"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="40dp"
@@ -77,20 +77,21 @@
         android:textColorHint="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText" />
+        app:layout_constraintTop_toBottomOf="@+id/user_email" />
+
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/inter_semibold"
         android:text="Don't have an account?"
         android:textColor="#FFFFFF"
         android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextPassword"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
-
+        app:layout_constraintStart_toStartOf="@+id/user_pass"
+        app:layout_constraintTop_toBottomOf="@+id/user_pass" />
 
     <TextView
         android:id="@+id/signup_redirect"
@@ -103,17 +104,28 @@
         android:textColor="#FFFFFF"
         android:textSize="14sp"
         app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/user_pass" />
 
     <ImageView
         android:id="@+id/login_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="76dp"
-        app:layout_constraintEnd_toEndOf="@+id/editTextTextPassword"
+        app:layout_constraintEnd_toEndOf="@+id/user_pass"
         app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="@+id/editTextTextPassword"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword"
+        app:layout_constraintStart_toStartOf="@+id/user_pass"
+        app:layout_constraintTop_toBottomOf="@+id/user_pass"
         app:srcCompat="@drawable/arrow" />
+
+    <ProgressBar
+        android:id="@+id/login_buffer"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="84dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/user_pass"
+        tools:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
