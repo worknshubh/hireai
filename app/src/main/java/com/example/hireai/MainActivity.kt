@@ -57,6 +57,8 @@ class MainActivity : AppCompatActivity() {
                         username = document.getString("username").toString()
                 }
             }
+
+        addmessage(messagedata(Constant.greet,"bot", Timestamp.now()))
         user_message_send_btn.setOnClickListener{
             if(user_message.text.toString().isNotEmpty()){
                 addmessage(messagedata(user_message.text.toString(),"user", Timestamp.now()))
@@ -117,7 +119,7 @@ class MainActivity : AppCompatActivity() {
     }
     fun loadmodel(){
         generativeModel = GenerativeModel(
-            modelName = "gemini-1.5-flash",
+            modelName = "gemini-1.5-pro",
             apiKey = Constant.api_key
         )
     }
