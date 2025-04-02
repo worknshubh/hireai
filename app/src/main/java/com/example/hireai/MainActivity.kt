@@ -1,6 +1,7 @@
 package com.example.hireai
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.MenuInflater
@@ -20,15 +21,19 @@ import com.google.firebase.Timestamp
 import kotlinx.coroutines.launch
 import com.google.ai.client.generativeai.Chat
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var firestore: FirebaseFirestore
     private lateinit var generativeModel: GenerativeModel
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: myAdapter
     private lateinit var drawerlayout:DrawerLayout
     private var chatSession: Chat? = null
     var messagedata = mutableListOf<messagedata>()
-
+    var username:String = ""
     @SuppressLint("WrongViewCast", "MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,12 +44,19 @@ class MainActivity : AppCompatActivity() {
         var user_message_send_btn = findViewById<ImageView>(R.id.user_message_send_btn)
         var menubar = findViewById<ImageView>(R.id.menu_bar)
         var nav_bar = findViewById<NavigationView>(R.id.navigationview)
+        firestore = FirebaseFirestore.getInstance()
         drawerlayout = findViewById(R.id.drawer_layout)
         recyclerView = findViewById(R.id.recyclerview)
         adapter = myAdapter(messagedata)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
+            FirebaseAuth.getInstance().currentUser?.let {
+                firestore.collection("UserInfo").document(
+                    it.uid).get().addOnSuccessListener { document ->
+                        username = document.getString("username").toString()
+                }
+            }
         user_message_send_btn.setOnClickListener{
             if(user_message.text.toString().isNotEmpty()){
                 addmessage(messagedata(user_message.text.toString(),"user", Timestamp.now()))
@@ -59,6 +71,17 @@ class MainActivity : AppCompatActivity() {
         }
         menubar.setOnClickListener{
         drawerlayout.openDrawer(GravityCompat.START)
+        }
+        nav_bar.setNavigationItemSelectedListener { item->
+            when(item.itemId){
+                R.id.logout->{
+                    FirebaseAuth.getInstance().signOut()
+                    startActivity(Intent(this,loginScreen::class.java))
+                    finish()
+                    true
+                }
+                else->false
+            }
         }
 
     }
@@ -77,14 +100,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         val formattedMessage = """
-            You are an interviewer and your name is HireAI and your company name is ShubhAgency. 
-            Act accordingly, maintain a structured interview format, and talk formally. 
-            Guide the interviewee step by step:
-            1️tart with personal information.
-            Then ask about their skills.
-            Ask what post they are applying for.
-            Guide them based on their answers.
-            Question: $userMessage
+             Interview Flow:
+        Greet Candidate $username
+            ${Constant.guideline}
+       
+         $userMessage
         """.trimIndent()
 
         val response = chatSession?.sendMessage(formattedMessage)
