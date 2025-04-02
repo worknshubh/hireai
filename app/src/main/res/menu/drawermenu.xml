@@ -2,8 +2,25 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="Home" />
-    <item android:title="History" />
-    <item android:title="About" />
-    <item android:title="Logout" />
+    <group android:checkableBehavior="single">
+        <item android:title="Home"
+            android:icon="@drawable/homeiconhollow"/>
+        <item android:title="History"
+            android:icon="@drawable/historyiconhollow"/>
+
+    </group>
+    <item android:title="______________________________________________________________________" android:enabled="false">
+    </item>
+    <group android:checkableBehavior="single">
+        <item android:title="About"
+            android:icon="@drawable/abouticon"/>
+        <item android:title="Share" android:icon="@drawable/shareicon" />
+    </group>
+    <item android:title="______________________________________________________________________" android:enabled="false">
+    </item>
+    <group android:checkableBehavior="single">
+        <item android:title="Logout" android:icon="@drawable/logouticon"/>
+    </group>
+
+
 </menu>
