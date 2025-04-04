@@ -3,6 +3,7 @@ package com.example.hireai
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.MenuInflater
 import android.view.View
@@ -23,6 +24,7 @@ import com.google.ai.client.generativeai.Chat
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlin.math.log
 
 
 class MainActivity : AppCompatActivity() {
@@ -115,11 +117,10 @@ class MainActivity : AppCompatActivity() {
                 addmessage(messagedata(response.text.toString(),"bot", Timestamp.now()))
             }
         }
-
     }
     fun loadmodel(){
         generativeModel = GenerativeModel(
-            modelName = "gemini-1.5-pro",
+            modelName = "gemini-2.0-flash",
             apiKey = Constant.api_key
         )
     }
