@@ -4,12 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
-import android.view.MenuInflater
-import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -24,7 +21,7 @@ import com.google.ai.client.generativeai.Chat
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlin.math.log
+import java.time.LocalDateTime
 
 
 class MainActivity : AppCompatActivity() {
@@ -34,9 +31,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapter: myAdapter
     private lateinit var drawerlayout:DrawerLayout
     private var chatSession: Chat? = null
+    var userpoint:Int = 0
+    var totalpointsscored:Int = 0
     var messagedata = mutableListOf<messagedata>()
     var username:String = ""
-    @SuppressLint("WrongViewCast", "MissingInflatedId")
+    @SuppressLint("WrongViewCast", "MissingInflatedId", "SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -78,10 +77,39 @@ class MainActivity : AppCompatActivity() {
         }
         nav_bar.setNavigationItemSelectedListener { item->
             when(item.itemId){
+                R.id.home->{
+                    startActivity(Intent(this,MainActivity::class.java))
+                    true
+                }
                 R.id.logout->{
                     FirebaseAuth.getInstance().signOut()
                     startActivity(Intent(this,loginScreen::class.java))
                     finish()
+                    true
+                }
+                R.id.dashboard ->{
+                    val intent = Intent(this,switchScreen::class.java)
+                    intent.putExtra("screenname","dashboard")
+                    startActivity(intent)
+                    true
+                }
+                R.id.aboutus->{
+                    val intent = Intent(this,switchScreen::class.java)
+                    intent.putExtra("screenname","aboutscreen")
+                    startActivity(intent)
+                    true
+                }
+                R.id.history->{
+                    Toast.makeText(this,"Working on it",Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.share->{
+                    val shareApp = Intent(Intent.ACTION_SEND).apply { type="text/plain"
+                    putExtra(Intent.EXTRA_TEXT,"""
+                        Turn Interview Fear Into Interview Flare 
+                        Download HireAI : 
+                    """.trimIndent())}
+                    startActivity(Intent.createChooser(shareApp,"Share Via"))
                     true
                 }
                 else->false
@@ -113,8 +141,30 @@ class MainActivity : AppCompatActivity() {
 
         val response = chatSession?.sendMessage(formattedMessage)
         if (response != null) {
+            val responsetext = response.text.toString()
+            val extractedPoints = extractCurrent(responsetext) ?:userpoint
+            val totalpoints = extractTotal(responsetext)?:0
+
+            userpoint = extractedPoints
+            totalpointsscored = totalpoints
             if (!response.text.isNullOrEmpty()) {
                 addmessage(messagedata(response.text.toString(),"bot", Timestamp.now()))
+            }
+            Log.e("TAG", "sendtoai: $userpoint", )
+            Constant.usercurrentpoint = userpoint
+            Log.e("TAG", "sendtoai: $totalpointsscored", )
+            if(totalpointsscored>0){
+
+                FirebaseAuth.getInstance().currentUser?.let {
+                    firestore.collection("userscore").document(
+                        it.uid).collection("userscorehistory").add(scoredata(totalpointsscored.toString(), LocalDateTime.now().toString())).addOnSuccessListener {
+                            Toast.makeText(this,"Added Successfully to Your Profile",Toast.LENGTH_SHORT)
+                                .show()                    }
+                        .addOnFailureListener {
+                            Toast.makeText(this,"Failed to Add to Profile ",Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                }
             }
         }
     }
@@ -123,5 +173,20 @@ class MainActivity : AppCompatActivity() {
             modelName = "gemini-2.0-flash",
             apiKey = Constant.api_key
         )
+    }
+    fun extractCurrent(input: String): Int? {
+        val regex = "scored so far:\\s*(\\d+)".toRegex()
+        return regex.find(input)?.groupValues?.get(1)?.toIntOrNull()
+    }
+
+    fun extractTotal(input: String): Int? {
+        val regex = "Total Marks Scored:\\s*(\\d+)".toRegex()
+        return regex.find(input)?.groupValues?.get(1)?.toIntOrNull()
+    }
+    override fun onResume() {
+        super.onResume()
+        if (drawerlayout.isDrawerOpen(GravityCompat.START)) {
+            drawerlayout.closeDrawer(GravityCompat.START)
+        }
     }
 }

@@ -3,18 +3,33 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item android:title="Home"
-            android:icon="@drawable/homeiconhollow"/>
-        <item android:title="History"
-            android:icon="@drawable/historyiconhollow"/>
+        <item
+            android:id="@+id/home"
+            android:icon="@drawable/homeiconhollow"
+            android:title="Home" />
+        <item
+            android:id="@+id/dashboard"
+            android:icon="@drawable/dashboardlogo"
+            android:title="Dashboard"></item>
+        <item
+            android:id="@+id/history"
+            android:icon="@drawable/historyiconhollow"
+            android:title="History"
+            android:visible="false" />
 
     </group>
     <item android:title="______________________________________________________________________" android:enabled="false">
     </item>
     <group android:checkableBehavior="single">
-        <item android:title="About"
-            android:icon="@drawable/abouticon"/>
-        <item android:title="Share" android:icon="@drawable/shareicon" />
+        <item
+            android:id="@+id/aboutus"
+            android:icon="@drawable/abouticon"
+            android:title="About"
+            android:visible="false" />
+        <item
+            android:id="@+id/share"
+            android:icon="@drawable/shareicon"
+            android:title="Share" />
     </group>
     <item android:title="______________________________________________________________________" android:enabled="false">
     </item>
