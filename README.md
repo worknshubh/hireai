@@ -14,6 +14,14 @@ Hire AI is a text-based mock interview assistant designed to help users practice
 -  **Real-Time Progress Tracking**: Track your improvement over time based on your performance.
 -  **Friendly User Interface**: Simple, interactive interface that makes the interview process easy to navigate.
 
-## Screenshots
+## Tech Stack
 
-![Screenshot 1](![Image](https://github.com/user-attachments/assets/be1821fc-e3eb-45ad-a39a-5dd7afb27cb4))
+**Language:** Kotlin
+
+**UI Design:**  XML (Native Android UI)
+
+**Architecture:**  MVVM (Model-View-ViewModel)
+
+**Authentication:**  Firebase Authentication
+
+**Database:**  Firebase Firestore
